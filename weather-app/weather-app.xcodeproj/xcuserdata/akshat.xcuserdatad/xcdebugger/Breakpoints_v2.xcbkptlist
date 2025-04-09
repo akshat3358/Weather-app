@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "F7947F76-C96A-43E6-99C0-BF1B008CD419"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F085A47D-DEBA-4B63-9A8F-88A8882CA29A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "weather-app/ViewModel/WeatherViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "fetchCurrentWeather()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F085A47D-DEBA-4B63-9A8F-88A8882CA29A - d79b400679cce930"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;weather_app.CurrentWeather, Swift.Error&gt;) -&gt; () in weather_app.WeatherViewModel.fetchCurrentWeather() -&gt; ()"
+                  moduleName = "weather-app.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/akshat/Documents/GitHub/Weather-app/weather-app/weather-app/ViewModel/WeatherViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "22"
+                  endingLineNumber = "22">
+               </Location>
+               <Location
+                  uuid = "F085A47D-DEBA-4B63-9A8F-88A8882CA29A - 2a1f7d94099e1611"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Result&lt;weather_app.CurrentWeather, Swift.Error&gt;) -&gt; () in weather_app.WeatherViewModel.fetchCurrentWeather() -&gt; ()"
+                  moduleName = "weather-app.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/akshat/Documents/GitHub/Weather-app/weather-app/weather-app/ViewModel/WeatherViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
