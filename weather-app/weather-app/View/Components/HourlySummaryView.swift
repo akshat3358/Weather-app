@@ -15,13 +15,25 @@ struct HourlySummaryView: View {
             Text(time)
                 .font(.footnote)
                 .foregroundColor(.gray)
-            Image(systemName: icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 30, height: 30)
+            if let imageUrl = URL(string: "https:" + icon) {
+                            AsyncImage(url: imageUrl) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                        } else {
+                            Text("Invalid URL")
+                        }
+                
             Text(temp)
                 .font(.caption)
         }
-        .frame(width: 60)
+        .frame(width: 60, height: 100)
+                .padding(10)
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(10)
     }
 }

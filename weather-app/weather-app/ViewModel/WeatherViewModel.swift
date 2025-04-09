@@ -8,29 +8,13 @@ import Combine
 class WeatherViewModel: ObservableObject {
     // Current weather data
     
-    @Published var currentWeather: CurrentWeather?
-        @Published var forecast: ForecastResponse?
-        @Published var hourlyForecast: [HourlyForecast] = [] // For Hourly Forecast
+    @Published var currentWeather: Current?
+        @Published var forecast: WeatherResponse?
+        @Published var hourlyForecast: [Hour] = [] // For Hourly Forecast
         @Published var isLoading = false
         @Published var errorMessage: String?
         @Published var city: String = ""
     
-   
-    
-    func fetchCurrentWeather() {
-           isLoading = true
-           APIClient.shared.fetchCurrentWeather(for: city) { [weak self] result in
-               DispatchQueue.main.async {
-                   self?.isLoading = false
-                   switch result {
-                   case .success(let weather):
-                       self?.currentWeather = weather
-                   case .failure(let error):
-                       self?.errorMessage = "Failed to fetch current weather: \(error.localizedDescription)"
-                   }
-               }
-           }
-       }
     
     func fetchForecast() {
         isLoading = true
@@ -40,6 +24,7 @@ class WeatherViewModel: ObservableObject {
                 switch result {
                 case .success(let forecast):
                     self?.forecast = forecast
+                    self?.currentWeather = forecast.current
                     self?.hourlyForecast = forecast.forecast.forecastday.first?.hour ?? []
                 case .failure(let error):
                     self?.errorMessage = "Failed to fetch forecast: \(error.localizedDescription)"
@@ -48,15 +33,16 @@ class WeatherViewModel: ObservableObject {
         }
     }
     
-    func tempFor(hourly: HourlyForecast) -> String {
+    // Helper methods for formatting data
+    func tempFor(hourly: Hour) -> String {
         return "\(Int(hourly.tempC))°C"
     }
     
-    func imageFor(hourly: HourlyForecast) -> String {
+    func imageFor(hourly: Hour) -> String {
         return hourly.condition.icon
     }
     
-    func timeFor(hourly: HourlyForecast) -> String {
+    func timeFor(hourly: Hour) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "h a"
         let date = Date(timeIntervalSince1970: TimeInterval(hourly.timeEpoch))

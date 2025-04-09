@@ -12,18 +12,28 @@ struct DayWiseSummaryView: View {
     let icon: String
     
     var body: some View {
-        VStack {
+        HStack {
             Text(day)
-                .font(.headline)
-            Image(systemName: icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
+                .fontWeight(.medium)
+            Spacer()
             Text("\(highTemp) / \(lowTemp)")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .fontWeight(.light)
+            if let imageUrl = URL(string: "https:" + icon) {
+                AsyncImage(url: imageUrl) { image in
+                    image
+                        .renderingMode(.original)
+                        .imageScale(.small)
+                } placeholder: {
+                    ProgressView()
+                }
+                .padding()
+            } else {
+                Text("Invalid URL")
+            }
         }
-        .padding()
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+        .padding(.vertical, 5)
+        .background(Color(.gray))
+        .cornerRadius(10)
     }
 }
