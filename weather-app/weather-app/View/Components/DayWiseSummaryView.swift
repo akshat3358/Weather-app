@@ -18,7 +18,7 @@ struct DayWiseSummaryView: View {
             Spacer()
             Text("\(highTemp) / \(lowTemp)")
                 .fontWeight(.light)
-            if let imageUrl = URL(string: "https:" + icon) {
+            if let imageUrl = URL(string: AppConstants.Api.httpsString + icon) {
                 AsyncImage(url: imageUrl) { image in
                     image
                         .renderingMode(.original)
@@ -28,12 +28,12 @@ struct DayWiseSummaryView: View {
                 }
                 .padding()
             } else {
-                Text("Invalid URL")
+                Text(AppConstants.constants.invalidURL)
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 5)
+        .padding(.vertical, AppConstants.constants.padding5)
         .background(Color(.gray))
-        .cornerRadius(10)
+        .cornerRadius(AppConstants.constants.cornerRadius10)
     }
 }

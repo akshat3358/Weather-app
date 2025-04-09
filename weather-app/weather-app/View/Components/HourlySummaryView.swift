@@ -15,7 +15,7 @@ struct HourlySummaryView: View {
             Text(time)
                 .font(.footnote)
                 .foregroundColor(.gray)
-            if let imageUrl = URL(string: "https:" + icon) {
+            if let imageUrl = URL(string: AppConstants.Api.httpsString + icon) {
                             AsyncImage(url: imageUrl) { image in
                                 image
                                     .resizable()
@@ -25,15 +25,15 @@ struct HourlySummaryView: View {
                                 ProgressView()
                             }
                         } else {
-                            Text("Invalid URL")
+                            Text(AppConstants.constants.invalidURL)
                         }
                 
             Text(temp)
                 .font(.caption)
         }
         .frame(width: 60, height: 100)
-                .padding(10)
+                .padding(AppConstants.constants.padding10)
                 .background(Color(.secondarySystemBackground))
-                .cornerRadius(10)
+                .cornerRadius(AppConstants.constants.cornerRadius10)
     }
 }

@@ -2,50 +2,32 @@
 //  APIClient.swift
 //  weather-app
 import Foundation
+import Combine
 
 // MARK: - APIClient
 class APIClient {
-    
+
     static let shared = APIClient() // Singleton instance
-    
-    private let baseURL = "https://api.weatherapi.com/v1/"
-    private let apiKey = "Enter your api key here"
     
     private init() {}
     
     // Function to fetch forecast data
-    func fetchForecast(for city: String, days: Int, completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
-        let urlString = "\(baseURL)forecast.json?key=\(apiKey)&q=\(city)&days=\(days)&aqi=no&alerts=no"
+    func fetchForecast(for city: String, days: Int) -> AnyPublisher<ForecastResponse, Error> {
+        let urlString = "\(AppConstants.Api.apiUrl)forecast.json?key=\(AppConstants.Api.apiKey)&q=\(city)&days=\(days)&aqi=no&alerts=no"
         
         guard let url = URL(string: urlString) else {
-            completion(.failure(APIError.invalidURL))
-            return
+            return Fail(error: APIError.invalidURL).eraseToAnyPublisher()
         }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map { $0.data } // Extract data from the response
+            .decode(type: ForecastResponse.self, decoder: JSONDecoder())
+            .mapError { error in
+                error as? APIError ?? APIError.noData
             }
-            
-            guard let data = data else {
-                completion(.failure(APIError.noData))
-                return
-            }
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Raw JSON Response: \(jsonString)")
-            }
-            
-            do {
-                let forecastData = try JSONDecoder().decode(WeatherResponse.self, from: data)
-                completion(.success(forecastData))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
+            .eraseToAnyPublisher()
     }
-    
 }
+
 enum APIError: Error {
     case invalidURL
     case noData

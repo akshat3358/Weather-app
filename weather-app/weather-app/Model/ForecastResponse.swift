@@ -11,48 +11,6 @@ struct Condition: Codable {
     let code: Int
 }
 
-// Location struct to represent location information
-struct Location: Codable {
-    let name: String
-    let region: String
-    let country: String
-    
-    enum CodingKeys: String, CodingKey {
-        case name, region, country
-    }
-}
-
-// Current struct to represent the current weather data
-struct Current: Codable {
-   
-    let tempC: Double
-    let tempF: Double
-    
-    let condition: Condition
-    let windMph: Double
-    let windKph: Double
-    let windDir: String
-    let humidity: Int
-    let cloud: Int
-    let feelslikeC: Double
-    let feelslikeF: Double
-    let uv: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case tempC = "temp_c"
-        case tempF = "temp_f"
-        case condition
-        case windMph = "wind_mph"
-        case windKph = "wind_kph"
-        case windDir = "wind_dir"
-        case humidity
-        case cloud
-        case feelslikeC = "feelslike_c"
-        case feelslikeF = "feelslike_f"
-        case uv
-    }
-}
-
 // Astro struct to represent the astronomical data
 struct Astro: Codable {
     let sunrise: String
@@ -135,9 +93,9 @@ struct Hour: Codable,Identifiable {
 }
 
 // WeatherResponse struct to represent the entire API response
-struct WeatherResponse: Codable {
+struct ForecastResponse: Codable {
     let location: Location
-    let current: Current
+    let current: CurrentWeather
     let forecast: Forecast
 }
 

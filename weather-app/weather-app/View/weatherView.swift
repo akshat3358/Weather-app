@@ -1,25 +1,54 @@
-//
-//  weatherView.swift
-//  weather-app
-
 import SwiftUI
 
 struct WeatherView: View {
     @StateObject private var viewModel = WeatherViewModel()
     
     var body: some View {
-        Text("Weather App")
+        Text(AppConstants.constants.appTitle)
             .font(.subheadline)
             .fontWeight(.semibold)
+        
         ZStack {
             BackgroundView()
+            
             VStack {
-                VStack{
-                    TextField("Enter city", text: $viewModel.city,onCommit: {
-                        viewModel.fetchForecast()
-                    })
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                // Search Bar
+                VStack {
+                    HStack{
+                        TextField(AppConstants.constants.enterCityPlaceholder, text: $viewModel.city)
+                            .onChange(of: viewModel.city, {
+                                viewModel.resetWeatherData()
+                            })
+                            .padding()
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
+                        
+                        // Clear Button (cross) to reset the text field
+                        if !viewModel.city.isEmpty {
+                            Button(action: {
+                                viewModel.city = AppConstants.constants.emptyString
+                                viewModel.resetWeatherData() // Reset the weather data to default
+                            }) {
+                                Image(systemName: AppConstants.constants.cross)
+                                    .foregroundColor(.gray)
+                                    .padding(.trailing)
+                            }
+                        }
+                    }
+                    
+                    // Search Button (activates only when searchText is not empty)
+                    Button(action: {
+                        viewModel.fetchWeather(for: viewModel.city, days: 5)
+                    }) {
+                        Text(AppConstants.constants.searchButtonTitle)
+                            .foregroundColor(viewModel.city.isEmpty ? .gray : .black)
+                            .padding(.horizontal)
+                            .padding(AppConstants.constants.padding8)
+                            .background(viewModel.city.isEmpty ? Color.gray.opacity(AppConstants.constants.opacity) : Color.blue)
+                            .cornerRadius(AppConstants.constants.cornerRadius8)
+                    }
+                    .disabled(viewModel.city.isEmpty) // Disable if no text is entered
                 }
                 if viewModel.isLoading {
                     ProgressView()
@@ -35,12 +64,13 @@ struct WeatherView: View {
                 ScrollView(.vertical,showsIndicators: false){
                     VStack{
                         if let currentWeather = viewModel.currentWeather {
-                            VStack(spacing:4) {
+                            VStack(spacing:AppConstants.constants.spacing4) {
+                                Spacer()
                                 Text(viewModel.city)
                                     .font(.title)
                                     .fontWeight(.medium)
                                 HStack {
-                                    if let imageUrl = URL(string: "https:" + currentWeather.condition.icon) {
+                                    if let imageUrl = URL(string: AppConstants.Api.httpsString + currentWeather.condition.icon) {
                                         AsyncImage(url: imageUrl) { image in
                                             image
                                                 .renderingMode(.original)
@@ -48,9 +78,8 @@ struct WeatherView: View {
                                         } placeholder: {
                                             ProgressView()
                                         }
-                                        
                                     }
-                                    Text("\(Int(currentWeather.tempC))°C")
+                                    Text("\(Int(currentWeather.tempC))"+AppConstants.constants.degree)
                                         .fontWeight(.semibold)
                                 }
                                 
@@ -58,46 +87,46 @@ struct WeatherView: View {
                                     .foregroundColor(.secondary)
                             }
                         }
+                        
+                        // Astro details, hourly forecast, and 5-day forecast views
                         VStack {
-                            ZStack {
+                            HStack {
                                 if let astro = viewModel.forecast?.forecast.forecastday.first?.astro,
                                    let day = viewModel.forecast?.forecast.forecastday.first?.day {
                                     
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 6) {
+                                    
+                                    VStack(alignment: .leading, spacing: AppConstants.constants.spacing6) {
                                             detailView(text: astro.sunrise,
-                                                       image: .init(systemName: "sunrise"),
+                                                       image: .init(systemName: AppConstants.constants.sunriseString),
                                                        offset: .init(width: 0, height: -2))
                                             detailView(text: astro.sunset,
-                                                       image: .init(systemName: "sunset"),
+                                                       image: .init(systemName: AppConstants.constants.sunsetString),
                                                        offset: .init(width: 0, height: -2))
                                         }
-                                        Spacer()
-                                    }
+                                        
+                                    Spacer()
 
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        detailView(text: "UV: \(day.uv)",
-                                                   image: .init(systemName: "sun.max"))
+                                    VStack(alignment: .leading, spacing: AppConstants.constants.spacing6) {
+                                        detailView(text:  AppConstants.constants.UV + " \(day.uv)",
+                                                   image: .init(systemName: AppConstants.constants.sunMax))
                                         
                                         if let humidity = viewModel.currentWeather?.humidity {
                                             detailView(text: "\(humidity)",
-                                                       image: .init(systemName: "humidity"))
+                                                       image: .init(systemName: AppConstants.constants.humidity))
                                         }
-                                        
                                     }
                                     
-                                    HStack {
-                                        Spacer()
-                                        VStack(alignment: .leading, spacing: 6) {
+                                    Spacer()
+                                        VStack(alignment: .leading, spacing: AppConstants.constants.spacing6) {
                                             
                                             if let windKph = viewModel.currentWeather?.windKph {
                                                 detailView(text: windKph.description,
-                                                           image: .init(systemName: "wind"))
+                                                           image: .init(systemName: AppConstants.constants.wind))
                                                 detailView(text: "\(windKph)",
-                                                           image: .init(systemName: "arrow.up.right.circle"))
+                                                           image: .init(systemName: AppConstants.constants.windicon))
                                             }
                                         }
-                                    }
+                                    
                                 }
                             }
                             .padding()
@@ -108,13 +137,10 @@ struct WeatherView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(viewModel.hourlyForecast) { hourly in
-                                        let time = viewModel.timeFor(hourly: hourly)
-                                        let temp = viewModel.tempFor(hourly: hourly)
-                                        let icon = viewModel.imageFor(hourly: hourly)
                                         HourlySummaryView(
-                                            temp: temp,
-                                            icon: icon,
-                                            time: time
+                                            temp: viewModel.tempFor(hourly: hourly),
+                                            icon: viewModel.imageFor(hourly: hourly),
+                                            time: viewModel.timeFor(hourly: hourly)
                                         )
                                     }
                                 }
@@ -140,6 +166,7 @@ struct WeatherView: View {
         }
         .navigationBarHidden(true)
     }
+    
     @ViewBuilder func detailView(text: String, image: Image, offset: CGSize = .zero) -> some View {
         HStack {
             image

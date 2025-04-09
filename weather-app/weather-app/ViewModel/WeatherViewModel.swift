@@ -8,31 +8,41 @@ import Combine
 class WeatherViewModel: ObservableObject {
     // Current weather data
     
-    @Published var currentWeather: Current?
-        @Published var forecast: WeatherResponse?
-        @Published var hourlyForecast: [Hour] = [] // For Hourly Forecast
-        @Published var isLoading = false
-        @Published var errorMessage: String?
-        @Published var city: String = ""
+    @Published var currentWeather: CurrentWeather?
+    @Published var forecast: ForecastResponse?
+    @Published var hourlyForecast: [Hour] = [] // For Hourly Forecast
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    @Published var city: String = ""
+    @Published var error: Error?
+    private var cancellables = Set<AnyCancellable>()
     
-    
-    func fetchForecast() {
+    func fetchWeather(for city: String, days: Int) {
+        
         isLoading = true
-        APIClient.shared.fetchForecast(for: city, days: 5) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let forecast):
-                    self?.forecast = forecast
-                    self?.currentWeather = forecast.current
-                    self?.hourlyForecast = forecast.forecast.forecastday.first?.hour ?? []
+        APIClient.shared.fetchForecast(for: city, days: days)
+            .receive(on: DispatchQueue.main) // Ensure we update UI on the main thread
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
                 case .failure(let error):
+                    self?.isLoading = false
                     self?.errorMessage = "Failed to fetch forecast: \(error.localizedDescription)"
+                case .finished:
+                    self?.isLoading = false
                 }
-            }
-        }
+            }, receiveValue: { [weak self] forecast in
+                self?.forecast = forecast
+                self?.currentWeather = forecast.current
+                self?.hourlyForecast = forecast.forecast.forecastday.first?.hour ?? []
+            })
+            .store(in: &cancellables) // Retain the subscription
     }
-    
+    func resetWeatherData() {
+           currentWeather = nil
+           forecast = nil
+           hourlyForecast = []
+           errorMessage = nil
+       }
     // Helper methods for formatting data
     func tempFor(hourly: Hour) -> String {
         return "\(Int(hourly.tempC))°C"
