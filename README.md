@@ -13,10 +13,11 @@ This project follows the MVVM (Model-View-ViewModel) architecture to ensure a cl
 - [API Integration](#api-integration)
 - [Installation](#installation)
 - [Error Handling](#error-handling)
-- [Usage](#usage)
+- [Requirements](#requirements)
 - [Known Issues](#known-issues)
 - [Executing Tests](#executing-tests)
 - [Coverage Reports](#coverage-reports)
+- [Glance of the app](#glance-of-the-app)
   
 ## Features
 
@@ -127,7 +128,7 @@ Error handling mechanisms are implemented to ensure a smooth user experience:
 - Xcode 16.0+
 - Swift 5.0+
 
-## Known Issue 
+## Known Issues
 - App doesn't support current location weather data. City is required to fetch data.
 - Currently, app display Celsius for temperature and kilometers per hour (kph) for wind speed. There is no option to switch to Fahrenheit.
 
