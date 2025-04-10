@@ -48,7 +48,7 @@ Using this, ensures that viewModel is not tightly coupled to view.
 
 ## Technologies Used for this Project
  <details>
-   <summary>Technologies Used for this Project</summary>
+   <summary>Technologies</summary>
    <ol>
      <li>Swift</li>
      <li>SwiftUI Framework</li>
