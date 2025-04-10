@@ -8,7 +8,7 @@
 import Foundation
 
 struct AppConstants {
-    enum Api {
+    struct Api {
         static let apiUrl = "https://api.weatherapi.com/v1/forecast.json"
         static let apiKey = "0678da5b48454444bab30731250904"
         static let httpsString = "https:"
