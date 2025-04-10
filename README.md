@@ -9,6 +9,7 @@ This project follows the MVVM (Model-View-ViewModel) architecture to ensure a cl
 - [Features](#features)
 - [Assumptions](#assumptions)
 - [Architecture](#architecture)
+- [Technologies Used for this Project](#technologies-used-for-this-project)
 - [Project Folder Structure](#project-folder-structure)
 - [API Integration](#api-integration)
 - [Installation](#installation)
@@ -45,6 +46,18 @@ The app uses the **MVVM (Model-View-ViewModel)** architecture to maintain separa
 
 Using this, ensures that viewModel is not tightly coupled to view.
 
+## Technologies Used for this Project
+ <details>
+   <summary>Technologies Used for this Project</summary>
+   <ol>
+     <li>Swift</li>
+     <li>SwiftUI Framework</li>
+     <li>MVVM Architecture</li>
+     <li>Combine Framework</li>
+     <li>Json Decoding</li>
+   </ol>
+ </details>
+ 
 ## Project Folder Structure
 
 ```
