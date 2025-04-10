@@ -53,9 +53,9 @@ struct WeatherView: View {
                                 HStack {
                                     ForEach(viewModel.hourlyForecast) { hourly in
                                         HourlySummaryView(
-                                            temp: viewModel.tempFor(hourly: hourly),
+                                            temp: viewModel.tempFor(temp: hourly.tempC),
                                             icon: viewModel.imageFor(hourly: hourly),
-                                            time: viewModel.timeFor(hourly: hourly)
+                                            time: viewModel.timeFor(epochTime: hourly.timeEpoch)
                                         )
                                     }
                                 }
@@ -67,9 +67,9 @@ struct WeatherView: View {
                         if let forecast = viewModel.forecast {
                             ForEach(forecast.forecast.forecastday) { weather in
                                 DayWiseSummaryView(
-                                    day: viewModel.dayFor(weatherElement: weather),
-                                    highTemp: viewModel.highTempFor(weatherElement: weather),
-                                    lowTemp: viewModel.lowTempFor(weatherElement: weather),
+                                    day: viewModel.dayFor(epochDate: weather.dateEpoch),
+                                    highTemp: viewModel.highTempFor(maxTemp: weather.day.maxtempC),
+                                    lowTemp: viewModel.lowTempFor(minTemp: weather.day.mintempC),
                                     icon: viewModel.imageFor(weatherElement: weather)
                                 )
                             }.padding(.horizontal)
@@ -162,10 +162,10 @@ struct WeatherView: View {
                     Spacer()
                         VStack(alignment: .leading, spacing: AppConstants.constants.spacing6) {
                             
-                            if let windKph = viewModel.currentWeather?.windKph {
+                            if let windKph = viewModel.currentWeather?.windKph,let windDir = viewModel.currentWeather?.windDir {
                                 detailView(text: windKph.description,
                                            image: .init(systemName: AppConstants.constants.wind))
-                                detailView(text: "\(windKph)",
+                                detailView(text: "\(windDir)",
                                            image: .init(systemName: AppConstants.constants.windicon))
                             }
                         }

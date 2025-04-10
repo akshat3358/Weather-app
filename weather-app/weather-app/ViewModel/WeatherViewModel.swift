@@ -44,37 +44,37 @@ class WeatherViewModel: ObservableObject {
            errorMessage = nil
        }
     // Helper methods for formatting data
-    func tempFor(hourly: Hour) -> String {
-        return "\(Int(hourly.tempC))°C"
+    func tempFor(temp: Double) -> String {
+        return "\(Int(temp))°C"
     }
     
     func imageFor(hourly: Hour) -> String {
         return hourly.condition.icon
     }
     
-    func timeFor(hourly: Hour) -> String {
+    func timeFor(epochTime: Int) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "h a"
-        let date = Date(timeIntervalSince1970: TimeInterval(hourly.timeEpoch))
+        let date = Date(timeIntervalSince1970: TimeInterval(epochTime))
         return formatter.string(from: date)
     }
     
-    func dayFor(weatherElement: ForecastDay) -> String {
+    func dayFor(epochDate: Int) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
 
-        let date = Date(timeIntervalSince1970: TimeInterval(weatherElement.dateEpoch))
+        let date = Date(timeIntervalSince1970: TimeInterval(epochDate))
         
         dateFormatter.dateFormat = "EEEE"
         return dateFormatter.string(from: date).capitalized
     }
     
-    func highTempFor(weatherElement: ForecastDay) -> String {
-        return "\(Int(weatherElement.day.maxtempC))°C"
+    func highTempFor(maxTemp: Double) -> String {
+        return "\(Int(maxTemp))°C"
     }
     
-    func lowTempFor(weatherElement: ForecastDay) -> String {
-        return "\(Int(weatherElement.day.mintempC))°C"
+    func lowTempFor(minTemp: Double) -> String {
+        return "\(Int(minTemp))°C"
     }
     
     func imageFor(weatherElement: ForecastDay) -> String {
