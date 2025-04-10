@@ -9,9 +9,21 @@ import Foundation
 
 struct AppConstants {
     enum Api {
-        static let apiUrl = URL(string: "https://api.weatherapi.com/v1/")!
+        static let apiUrl = "https://api.weatherapi.com/v1/forecast.json"
         static let apiKey = "0678da5b48454444bab30731250904"
         static let httpsString = "https:"
+        
+        enum QueryKey: String {
+            case apiKey = "key"
+            case searchString = "q"
+            case aqi = "aqi"
+            case alerts = "alerts"
+            case numOfDays = "days"
+        }
+        
+        enum QueryValue: String {
+            case aqi,alerts = "no"
+        }
         
     }
     struct constants {

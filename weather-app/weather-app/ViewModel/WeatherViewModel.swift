@@ -60,10 +60,13 @@ class WeatherViewModel: ObservableObject {
     }
     
     func dayFor(weatherElement: ForecastDay) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM dd, yyyy"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
         let date = Date(timeIntervalSince1970: TimeInterval(weatherElement.dateEpoch))
-        return formatter.string(from: date)
+        
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: date).capitalized
     }
     
     func highTempFor(weatherElement: ForecastDay) -> String {
